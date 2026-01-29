@@ -1,0 +1,256 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Simulador de inversión en Ruiloba</title><style>:root{--bg:#f8fafc;--card:#ffffff;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--brand:#0f172a;--danger:#b91c1c;--radius:18px;--shadow:0 1px 0 rgba(15, 23, 42, .04),0 12px 24px rgba(15, 23, 42, .06);font-synthesis-weight:none}*{box-sizing:border-box}body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--ink)}.wrap{max-width:1100px;margin:0 auto;padding:28px 16px 56px}header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}h1{margin:0;font-size:28px;line-height:1.2;letter-spacing:-.02em}.sub{margin-top:8px;color:var(--muted);max-width:70ch}.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.pill{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 14px;border-radius:999px;cursor:pointer;font-weight:700;font-size:13px;transition:.15s ease}.pill:hover{background:#f1f5f9}.pill.active{background:var(--brand);color:#fff;border-color:var(--brand)}.grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:16px}@media (min-width:980px){.grid{grid-template-columns:1fr 1fr 1fr;gap:16px}.span2{grid-column:span 2}.span3{grid-column:span 3}}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.card h2{margin:0;font-size:16px;padding:14px 16px;border-bottom:1px solid #f1f5f9}.card .content{padding:16px}.fields{display:grid;gap:12px}.fields.cols3{grid-template-columns:1fr}@media (min-width:980px){.fields.cols3{grid-template-columns:repeat(3,1fr)}}label{display:block}.lbl{font-size:12px;font-weight:700;color:#334155;margin-bottom:6px}.input{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--ink);outline:0}.input:focus{box-shadow:0 0 0 3px rgba(148,163,184,.35)}.row{display:flex;gap:10px;align-items:center}.prefix,.suffix{color:var(--muted);font-size:13px}.big{background:var(--brand);color:#fff;border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;font-weight:800}.big .v{font-variant-numeric:tabular-nums}.kpis{display:grid;grid-template-columns:1fr;gap:12px}@media (min-width:780px){.kpis{grid-template-columns:repeat(4,1fr)}}.kpi{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:#fff}.kpi.dark{background:var(--brand);color:#fff;border-color:var(--brand)}.kpi .t{font-size:11px;font-weight:800;color:var(--muted)}.kpi.dark .t{color:#cbd5e1}.kpi .n{margin-top:6px;font-size:22px;font-weight:900;letter-spacing:-.02em;font-variant-numeric:tabular-nums}.kpi .d{margin-top:4px;font-size:12px;color:var(--muted)}.kpi.dark .d{color:#cbd5e1}table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden}.tablewrap{border:1px solid var(--line);border-radius:16px;overflow:hidden}td,th{padding:11px 12px;font-size:13px;border-bottom:1px solid #f1f5f9}th{text-align:left;background:#f8fafc;color:#334155;font-weight:800;border-bottom:1px solid var(--line)}td.r{text-align:right;font-variant-numeric:tabular-nums}tr:last-child td{border-bottom:0}.note{border:1px solid var(--line);background:#f8fafc;padding:14px;border-radius:16px;color:#334155;white-space:pre-line;line-height:1.45}.muted{color:var(--muted);font-size:12px}.gloss{display:grid;grid-template-columns:1fr;gap:12px}@media (min-width:780px){.gloss{grid-template-columns:1fr 1fr}}.item{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:#fff}.item b{display:block;margin-bottom:5px}footer{margin-top:18px;color:var(--muted);font-size:12px}ul.note-list{margin:0;padding-left:18px}ul.note-list li{margin:6px 0}</style></head><body><div class="wrap"><header><div><h1>Simulador de inversión en Ruiloba</h1><div class="sub">Ajusta supuestos por escenario y obtén facturación, gastos, ingresos netos, ROI, payback, plusvalía (CAGR) y retorno total anual.</div><div class="pills" id="scenarioPills"><button class="pill" data-s="Conservador">Conservador</button><button class="pill active" data-s="Realista">Realista</button><button class="pill" data-s="Agresivo">Agresivo</button></div></div></header><div class="grid"><div class="card"><h2>Monto de la inversión</h2><div class="content"><div class="fields"><label><div class="lbl">Precio de la unidad</div><div class="row"><span class="prefix">€</span><input class="input" type="number" step="0.01" min="0" id="unitPrice"></div></label><label><div class="lbl">Precio de construcción aprox. (100m²)</div><div class="row"><span class="prefix">€</span><input class="input" type="number" step="0.01" min="0" id="constructionPrice"></div></label><div class="big"><span>INVERSIÓN TOTAL</span><span class="v" id="investmentTotal">€0.00</span></div></div></div></div><div class="card span2"><h2>Supuestos del escenario (<span id="activeScenarioLabel">Realista</span>)</h2><div class="content"><div class="fields cols3"><label><div class="lbl">Precio por noche</div><div class="row"><span class="prefix">€</span><input class="input" type="number" step="1" min="0" id="nightlyPrice"></div></label><label><div class="lbl">Días del periodo</div><input class="input" type="number" step="1" min="1" id="daysInPeriod"></label><label><div class="lbl">Días ocupados</div><input class="input" type="number" step="1" min="0" id="daysOccupied"></label><label><div class="lbl">Cuota de mantenimiento</div><div class="row"><span class="prefix">€</span><input class="input" type="number" step="0.01" min="0" id="maintenance"></div></label><label><div class="lbl">Servicios (luz, agua, internet)</div><div class="row"><span class="prefix">€</span><input class="input" type="number" step="0.01" min="0" id="utilities"></div></label><label><div class="lbl">Marketing (% del ingreso)</div><div class="row"><input class="input" type="number" step="0.1" min="0" max="100" id="marketingPct"><span class="suffix">%</span></div></label><label><div class="lbl">Operación/Admin (% del ingreso)</div><div class="row"><input class="input" type="number" step="0.1" min="0" max="100" id="adminPct"><span class="suffix">%</span></div></label><label><div class="lbl">Plusvalía a finalización de obra</div><div class="row"><input class="input" type="number" step="1" min="0" max="300" id="completionPct"><span class="suffix">%</span></div></label><label><div class="lbl">Plusvalía total post-entrega (5 años)</div><div class="row"><input class="input" type="number" step="1" min="0" max="500" id="fiveYearPct"><span class="suffix">%</span></div></label></div><div class="muted" style="margin-top:10px">Tip: al cambiar de escenario, se editan valores solo de ese escenario (Conservador/Realista/Agresivo).</div></div></div><div class="card span3"><h2>Resultados clave</h2><div class="content"><div class="kpis"><div class="kpi"><div class="t">Ocupación</div><div class="n" id="kpiOcc">0%</div><div class="d" id="kpiOccDetail">—</div></div><div class="kpi"><div class="t">Ingreso neto mensual</div><div class="n" id="kpiNetMonthly">€0.00</div><div class="d">Después de gastos operativos</div></div><div class="kpi"><div class="t">ROI anual (renta)</div><div class="n" id="kpiRoi">0%</div><div class="d">Neto anual / inversión total</div></div><div class="kpi dark"><div class="t">Retorno total anual</div><div class="n" id="kpiTotal">0%</div><div class="d">ROI renta + CAGR plusvalía</div></div></div></div></div><div class="card span3"><h2>Proyección de facturación mensual</h2><div class="content"><div class="tablewrap"><table><tbody><tr><th>Concepto</th><th class="r">Valor</th></tr><tr><td>Precio por noche</td><td class="r" id="tNightly">€0.00</td></tr><tr><td>Días del periodo</td><td class="r" id="tDaysPeriod">0</td></tr><tr><td>Días ocupados</td><td class="r" id="tDaysOcc">0</td></tr><tr><td>Porcentaje de ocupación</td><td class="r" id="tOcc">0%</td></tr><tr><td><b>FACTURACIÓN MENSUAL TOTAL</b></td><td class="r"><b id="tRevenue">€0.00</b></td></tr></tbody></table></div></div></div><div class="card span3"><h2>Gastos mensuales operativos</h2><div class="content"><div class="tablewrap"><table><tbody><tr><th>Concepto</th><th class="r">Valor</th></tr><tr><td>Cuota de mantenimiento</td><td class="r" id="tMaint">€0.00</td></tr><tr><td>Marketing (<span id="tMktRate">0%</span>del ingreso)</td><td class="r" id="tMkt">€0.00</td></tr><tr><td>Servicios (luz, agua, internet)</td><td class="r" id="tUtil">€0.00</td></tr><tr><td>Operación/Admin (<span id="tAdmRate">0%</span>del ingreso)</td><td class="r" id="tAdm">€0.00</td></tr><tr><td><b>GASTOS MENSUALES TOTALES</b></td><td class="r"><b id="tCosts">€0.00</b></td></tr><tr><td><b>INGRESO ESTIMADO (neto)</b></td><td class="r"><b id="tNet">€0.00</b></td></tr></tbody></table></div></div></div><div class="card span3"><h2>Ingresos y rentabilidad</h2><div class="content"><div class="tablewrap"><table><tbody><tr><th>Concepto</th><th class="r">Valor</th></tr><tr><td>Ingresos netos mensuales</td><td class="r" id="tNetM">€0.00</td></tr><tr><td>Ingresos netos anuales</td><td class="r" id="tNetA">€0.00</td></tr><tr><td>ROI anual (%)</td><td class="r" id="tRoi">0%</td></tr><tr><td>Payback (años)</td><td class="r" id="tPayback">—</td></tr></tbody></table></div></div></div><div class="card span3"><h2>Plusvalía proyectada</h2><div class="content"><div class="fields cols3"><div class="kpi"><div class="t">Inicio de obra</div><div class="n" id="pvStart">€0.00</div><div class="d">Base: inversión total</div></div><div class="kpi"><div class="t">Finalización de obra</div><div class="n" id="pvFinish">€0.00</div><div class="d">+<span id="pvFinishPct">0</span>%</div></div><div class="kpi"><div class="t">Post-entrega (5 años)</div><div class="n" id="pv5y">€0.00</div><div class="d">CAGR:<b id="pvCagr">0%</b></div></div></div><div class="note" id="narrative" style="margin-top:14px"></div></div></div><div class="card span3"><h2>Comparativo por escenarios</h2><div class="content"><div class="tablewrap"><table><thead><tr><th>Métrica</th><th class="r">Conservador</th><th class="r">Realista</th><th class="r">Agresivo</th></tr></thead><tbody id="compareBody"></tbody></table></div></div></div><div class="card span3"><h2>Glosario</h2><div class="content"><div class="gloss"><div class="item"><b>ROI (Return On Investment)</b>Retorno anual por renta. Porcentaje de la inversión total que se recupera cada año gracias a la operación del inmueble.</div><div class="item"><b>Payback</b>Tiempo estimado (años) para recuperar el 100% del capital invertido solo con ingresos netos por renta.</div><div class="item"><b>Plusvalía</b>Incremento del valor del inmueble en el tiempo, independientemente de la renta.</div><div class="item"><b>CAGR (Compound Annual Growth Rate) (Tasa de Crecimiento Anual Compuesta)</b>Tasa de crecimiento anual compuesta del valor del inmueble a lo largo del tiempo.</div><div class="item" style="grid-column:1/-1"><b>Retorno total</b>Combinación del ROI por renta + CAGR por plusvalía. Refleja el impacto total de la inversión.</div></div></div></div></div><footer><div style="margin-top:10px;font-weight:700">Nota:</div><ul class="note-list"><li>Las tarifas de los precios no toman en cuenta los cambios en los mismos cuando en el país se realizan actividades como conciertos, Semana Santa o fines de semana festivos.</li><li>Esta información es una proyección esperada para una inversión en la zona con características similares. No constituye ningún tipo de acuerdo de ingreso obligatorio entre las partes.</li><li>Este escenario es una valoración que toma en cuenta las condiciones actuales de la zona.</li></ul></footer></div><script>// ====== Estado ======
+  const state = {
+    active: "Realista",
+    investment: {
+      unitPrice: 31580.78,
+      constructionPrice: 55000
+    },
+    scenarios: {
+      Conservador: {
+        nightlyPrice: 100,
+        daysInPeriod: 30,
+        daysOccupied: 20,
+        maintenance: 60,
+        utilities: 215,
+        marketingRate: 0.12,
+        adminRate: 0.15,
+        completionUplift: 0.20,
+        fiveYearUplift: 0.45
+      },
+      Realista: {
+        nightlyPrice: 120,
+        daysInPeriod: 30,
+        daysOccupied: 20,
+        maintenance: 60,
+        utilities: 215,
+        marketingRate: 0.12,
+        adminRate: 0.15,
+        completionUplift: 0.30,
+        fiveYearUplift: 0.65
+      },
+      Agresivo: {
+        nightlyPrice: 150,
+        daysInPeriod: 30,
+        daysOccupied: 20,
+        maintenance: 60,
+        utilities: 215,
+        marketingRate: 0.12,
+        adminRate: 0.15,
+        completionUplift: 0.40,
+        fiveYearUplift: 0.85
+      }
+    }
+  };
+
+  // ====== Utils ======
+  const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+  const r2 = (n) => Math.round((n + Number.EPSILON) * 100) / 100;
+
+  const fmtEUR = (n) => new Intl.NumberFormat("es-ES", { style:"currency", currency:"EUR", maximumFractionDigits: 2 }).format(n);
+  const fmtPct = (n) => new Intl.NumberFormat("es-ES", { style:"percent", maximumFractionDigits: 2 }).format(n);
+
+  function computeScenario(investmentTotal, s){
+    const daysOcc = clamp(Number(s.daysOccupied)||0, 0, Number(s.daysInPeriod)||0);
+    const daysPeriod = Math.max(1, Number(s.daysInPeriod)||30);
+    const occPct = daysPeriod > 0 ? daysOcc / daysPeriod : 0;
+
+    const revenue = (Number(s.nightlyPrice)||0) * daysOcc;
+
+    const marketing = revenue * (Number(s.marketingRate)||0);
+    const admin = revenue * (Number(s.adminRate)||0);
+    const costs = (Number(s.maintenance)||0) + (Number(s.utilities)||0) + marketing + admin;
+
+    const netMonthly = revenue - costs;
+    const netAnnual = netMonthly * 12;
+
+    const roi = investmentTotal > 0 ? netAnnual / investmentTotal : 0;
+    const payback = netAnnual > 0 ? investmentTotal / netAnnual : Infinity;
+
+    const start = investmentTotal;
+    const finish = start * (1 + (Number(s.completionUplift)||0));
+    const fiveYear = start * (1 + (Number(s.fiveYearUplift)||0));
+
+    const years = 5;
+    const cagr = start > 0 ? Math.pow(fiveYear / start, 1/years) - 1 : 0;
+
+    return {
+      occPct,
+      revenue: r2(revenue),
+      marketing: r2(marketing),
+      admin: r2(admin),
+      costs: r2(costs),
+      netMonthly: r2(netMonthly),
+      netAnnual: r2(netAnnual),
+      roi,
+      payback,
+      start: r2(start),
+      finish: r2(finish),
+      fiveYear: r2(fiveYear),
+      cagr,
+      total: roi + cagr
+    };
+  }
+
+  function investmentTotal(){
+    return r2((Number(state.investment.unitPrice)||0) + (Number(state.investment.constructionPrice)||0));
+  }
+
+  // ====== DOM refs ======
+  const el = (id) => document.getElementById(id);
+
+  const inputs = {
+    unitPrice: el("unitPrice"),
+    constructionPrice: el("constructionPrice"),
+    nightlyPrice: el("nightlyPrice"),
+    daysInPeriod: el("daysInPeriod"),
+    daysOccupied: el("daysOccupied"),
+    maintenance: el("maintenance"),
+    utilities: el("utilities"),
+    marketingPct: el("marketingPct"),
+    adminPct: el("adminPct"),
+    completionPct: el("completionPct"),
+    fiveYearPct: el("fiveYearPct")
+  };
+
+  // ====== Render ======
+  function render(){
+    const invTotal = investmentTotal();
+    el("investmentTotal").textContent = fmtEUR(invTotal);
+
+    // input values
+    inputs.unitPrice.value = state.investment.unitPrice;
+    inputs.constructionPrice.value = state.investment.constructionPrice;
+
+    const s = state.scenarios[state.active];
+    el("activeScenarioLabel").textContent = state.active;
+
+    inputs.nightlyPrice.value = s.nightlyPrice;
+    inputs.daysInPeriod.value = s.daysInPeriod;
+    inputs.daysOccupied.value = s.daysOccupied;
+    inputs.maintenance.value = s.maintenance;
+    inputs.utilities.value = s.utilities;
+    inputs.marketingPct.value = r2(s.marketingRate * 100);
+    inputs.adminPct.value = r2(s.adminRate * 100);
+    inputs.completionPct.value = r2(s.completionUplift * 100);
+    inputs.fiveYearPct.value = r2(s.fiveYearUplift * 100);
+
+    // computed active
+    const c = computeScenario(invTotal, s);
+
+    // KPIs
+    el("kpiOcc").textContent = fmtPct(c.occPct);
+    el("kpiOccDetail").textContent = `${clamp(s.daysOccupied, 0, s.daysInPeriod)}/${s.daysInPeriod} días`;
+    el("kpiNetMonthly").textContent = fmtEUR(c.netMonthly);
+    el("kpiRoi").textContent = fmtPct(c.roi);
+    el("kpiTotal").textContent = fmtPct(c.total);
+
+    // Revenue table
+    el("tNightly").textContent = fmtEUR(s.nightlyPrice);
+    el("tDaysPeriod").textContent = String(s.daysInPeriod);
+    el("tDaysOcc").textContent = String(clamp(s.daysOccupied, 0, s.daysInPeriod));
+    el("tOcc").textContent = fmtPct(c.occPct);
+    el("tRevenue").textContent = fmtEUR(c.revenue);
+
+    // Costs table
+    el("tMaint").textContent = fmtEUR(s.maintenance);
+    el("tMktRate").textContent = fmtPct(s.marketingRate);
+    el("tMkt").textContent = fmtEUR(c.marketing);
+    el("tUtil").textContent = fmtEUR(s.utilities);
+    el("tAdmRate").textContent = fmtPct(s.adminRate);
+    el("tAdm").textContent = fmtEUR(c.admin);
+    el("tCosts").textContent = fmtEUR(c.costs);
+    el("tNet").textContent = fmtEUR(c.netMonthly);
+
+    // Profit table
+    el("tNetM").textContent = fmtEUR(c.netMonthly);
+    el("tNetA").textContent = fmtEUR(c.netAnnual);
+    el("tRoi").textContent = fmtPct(c.roi);
+    el("tPayback").textContent = Number.isFinite(c.payback) ? c.payback.toFixed(2) : "—";
+
+    // Plusvalía
+    el("pvStart").textContent = fmtEUR(c.start);
+    el("pvFinish").textContent = fmtEUR(c.finish);
+    el("pvFinishPct").textContent = r2(s.completionUplift * 100);
+    el("pv5y").textContent = fmtEUR(c.fiveYear);
+    el("pvCagr").textContent = fmtPct(c.cagr);
+
+    // Narrative
+    const narrative =
+`Esta inversión no depende de una sola fuente de ganancia.
+Cada año genera flujo de efectivo por renta cercano a ${fmtPct(c.roi)} y, además, el activo crece alrededor de ${fmtPct(c.cagr)} anual, lo que nos da un retorno total estimado cercano a ${fmtPct(c.total)} anual.
+
+Esta inversión combina dos fuentes de ganancia:
+1) flujo mensual constante por renta
+2) crecimiento del valor del activo en el tiempo (plusvalía)
+
+No es solo una inversión que genera renta: es un activo que trabaja mes a mes y además crece en valor con el tiempo.`;
+    el("narrative").textContent = narrative;
+
+    // Comparativo
+    renderCompare(invTotal);
+  }
+
+  function renderCompare(invTotal){
+    const keys = ["Conservador","Realista","Agresivo"];
+    const computed = {};
+    keys.forEach(k => computed[k] = computeScenario(invTotal, state.scenarios[k]));
+
+    const rows = [
+      { label: "Facturación mensual", get: (x) => fmtEUR(x.revenue) },
+      { label: "Gastos mensuales", get: (x) => fmtEUR(x.costs) },
+      { label: "Ingreso neto mensual", get: (x) => fmtEUR(x.netMonthly) },
+      { label: "Ingreso neto anual", get: (x) => fmtEUR(x.netAnnual) },
+      { label: "ROI anual (renta)", get: (x) => fmtPct(x.roi) },
+      { label: "Payback (años)", get: (x) => (Number.isFinite(x.payback) ? x.payback.toFixed(2) : "—") },
+      { label: "CAGR (plusvalía)", get: (x) => fmtPct(x.cagr) },
+      { label: "Retorno total anual", get: (x) => fmtPct(x.total), strong: true },
+    ];
+
+    const tbody = el("compareBody");
+    tbody.innerHTML = "";
+
+    rows.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${r.strong ? "<b>"+r.label+"</b>" : r.label}</td>
+        <td class="r">${r.strong ? "<b>"+r.get(computed.Conservador)+"</b>" : r.get(computed.Conservador)}</td>
+        <td class="r">${r.strong ? "<b>"+r.get(computed.Realista)+"</b>" : r.get(computed.Realista)}</td>
+        <td class="r">${r.strong ? "<b>"+r.get(computed.Agresivo)+"</b>" : r.get(computed.Agresivo)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ====== Events ======
+  document.getElementById("scenarioPills").addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-s]");
+    if (!btn) return;
+    state.active = btn.dataset.s;
+    [...document.querySelectorAll(".pill")].forEach(p => p.classList.toggle("active", p.dataset.s === state.active));
+    render();
+  });
+
+  inputs.unitPrice.addEventListener("input", () => { state.investment.unitPrice = Number(inputs.unitPrice.value)||0; render(); });
+  inputs.constructionPrice.addEventListener("input", () => { state.investment.constructionPrice = Number(inputs.constructionPrice.value)||0; render(); });
+
+  function bindScenarioInput(dom, key, transformIn){
+    dom.addEventListener("input", () => {
+      const s = state.scenarios[state.active];
+      s[key] = transformIn(dom.value);
+      render();
+    });
+  }
+
+  bindScenarioInput(inputs.nightlyPrice, "nightlyPrice", v => Number(v)||0);
+  bindScenarioInput(inputs.daysInPeriod, "daysInPeriod", v => Math.max(1, Math.floor(Number(v)||30)));
+  bindScenarioInput(inputs.daysOccupied, "daysOccupied", v => Math.max(0, Math.floor(Number(v)||0)));
+  bindScenarioInput(inputs.maintenance, "maintenance", v => Number(v)||0);
+  bindScenarioInput(inputs.utilities, "utilities", v => Number(v)||0);
+
+  bindScenarioInput(inputs.marketingPct, "marketingRate", v => (Number(v)||0)/100);
+  bindScenarioInput(inputs.adminPct, "adminRate", v => (Number(v)||0)/100);
+
+  bindScenarioInput(inputs.completionPct, "completionUplift", v => (Number(v)||0)/100);
+  bindScenarioInput(inputs.fiveYearPct, "fiveYearUplift", v => (Number(v)||0)/100);
+
+  render();</script></body></html>
